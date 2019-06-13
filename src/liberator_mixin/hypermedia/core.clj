@@ -3,6 +3,7 @@
     [clojure.string :as str]
 
     [bidi.bidi :refer [path-for]]
+    [ring.util.codec :refer [form-encode]]
     [liberator-mixin.core :as core]))
 
 (defn base-url [request]
@@ -15,6 +16,13 @@
   (str
     (base-url request)
     (apply path-for routes handler args)))
+
+(defn absolute-url-with-query-params-for
+  [request routes handler params & args]
+  (str
+    (apply absolute-url-for request routes handler args)
+    "?"
+    (form-encode params)))
 
 (defn parameterised-url-for
   [request routes handler parameter-names & args]

@@ -77,6 +77,30 @@
               (hypermedia/absolute-url-for request routes :example
                 :example-id 123))))))
 
+  (testing "absolute-url-with-query-params-for"
+    (testing "returns the absolute url for a route with params"
+      (let [request {:scheme :https
+                     :headers {"host" "example.com"}}
+            routes [""
+                    [["/" :root]
+                     ["/examples" :examples]]]
+            account "123"
+            params {:name account}]
+        (is (= (str "https://example.com/examples?name=" account)
+              (hypermedia/absolute-url-with-query-params-for request routes :examples params)))))
+
+    (testing "absolute-url-with-query-params-for expands arguments"
+      (let [request {:scheme :https
+                     :headers {"host" "example.com"}}
+            routes [""
+                    [["/" :root]
+                     [["/examples/" :example-id] :example]]]
+            account "123"
+            params {:name account}]
+        (is (= (str "https://example.com/examples/random-id?name=" account)
+              (hypermedia/absolute-url-with-query-params-for request routes
+                :example params :example-id "random-id"))))))
+
   (testing "parameterised-url-for"
     (testing "describes a single parameter"
       (let [request {:scheme :https
