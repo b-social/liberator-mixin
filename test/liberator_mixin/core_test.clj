@@ -230,7 +230,7 @@
      :expected-left-context {:important "stuff"}
      :expected-right-context {:important "stuff"}
      :result [true {:important "stuff"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "returns false and context when left returns true "
@@ -241,7 +241,7 @@
      :expected-left-context {:important "stuff"}
      :expected-right-context {:important "stuff"}
      :result [true {:important "stuff"}]
-     :comparator core/or-comparator)
+     :comparator :or)
 
    (merge-test
      :description (str "returns false and context when left returns false "
@@ -250,9 +250,9 @@
      :left-attribute (fn [_] false)
      :right-attribute (fn [_] true)
      :expected-left-context {:important "stuff"}
-     :expected-right-context {:important "stuff"}
+     :expected-right-context nil
      :result [false {:important "stuff"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "returns false and context when left returns true "
@@ -263,7 +263,7 @@
      :expected-left-context {:important "stuff"}
      :expected-right-context {:important "stuff"}
      :result [false {:important "stuff"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "returns false and context when both left and right "
@@ -272,9 +272,9 @@
      :left-attribute (fn [_] false)
      :right-attribute (fn [_] false)
      :expected-left-context {:important "stuff"}
-     :expected-right-context {:important "stuff"}
+     :expected-right-context nil
      :result [false {:important "stuff"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "returns true and context when left and right both "
@@ -287,7 +287,7 @@
      :result [true {:first  [1 2 3 4 5 6]
                     :second "second"
                     :third  "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "returns false and context when left returns false "
@@ -296,11 +296,10 @@
      :left-attribute (fn [_] [false {:first [3 4]}])
      :right-attribute (fn [_] [true {:first [5 6] :third "third"}])
      :expected-left-context {:first [1 2] :second "second"}
-     :expected-right-context {:first [1 2 3 4] :second "second"}
-     :result [false {:first  [1 2 3 4 5 6]
-                     :second "second"
-                     :third  "third"}]
-     :comparator core/and-comparator)
+     :expected-right-context nil
+     :result [false {:first  [1 2 3 4]
+                     :second "second"}]
+     :comparator :and)
 
    (merge-test
      :description (str "returns false and context when left returns false "
@@ -313,7 +312,7 @@
      :result [false {:first  [1 2 3 4 5 6]
                      :second "second"
                      :third  "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "returns false and context when both left and right "
@@ -322,11 +321,10 @@
      :left-attribute (fn [_] [false {:first [3 4]}])
      :right-attribute (fn [_] [false {:first [5 6] :third "third"}])
      :expected-left-context {:first [1 2] :second "second"}
-     :expected-right-context {:first [1 2 3 4] :second "second"}
-     :result [false {:first  [1 2 3 4 5 6]
-                     :second "second"
-                     :third  "third"}]
-     :comparator core/and-comparator)
+     :expected-right-context nil
+     :result [false {:first  [1 2 3 4]
+                     :second "second"}]
+     :comparator :and)
 
    (merge-test
      :description (str "combines results when both decisions are fns returning "
@@ -339,7 +337,7 @@
      :result [true {:first  [1 2 3 4 5 6]
                     :second "second"
                     :third  "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description "executes left before right when both decisions are fns"
@@ -351,7 +349,7 @@
      :result [true {:first  [5 6]
                     :second "second"
                     :third  "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "takes result from second fn when both decisions are "
@@ -363,7 +361,7 @@
      :expected-right-context {:first [3 4]}
      :result [true {:first [5 6]
                     :third "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines results when first fn returns vector with "
@@ -376,7 +374,7 @@
      :expected-right-context {:first [3 4]}
      :result [true {:first [3 4 5 6]
                     :third "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "takes result from second fn when first fn returns "
@@ -389,7 +387,7 @@
      :expected-right-context {:first [1 2 3 4] :second "second"}
      :result [true {:first [5 6]
                     :third "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines when both left and right are vectors with "
@@ -402,7 +400,7 @@
      :result [true {:first  [1 2 3 4 5 6]
                     :second "second"
                     :third  "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines when left is vector with map in second "
@@ -416,7 +414,7 @@
      :result [true {:first  [1 2 3 4 5 6]
                     :second "second"
                     :third  "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines when left is vector with fn returning map in "
@@ -430,7 +428,7 @@
      :result [true {:first  [1 2 3 4 5 6]
                     :second "second"
                     :third  "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines left with context when left is map and right "
@@ -441,7 +439,7 @@
      :expected-left-context nil
      :expected-right-context nil
      :result [true {:first [1 2 3 4] :second "second" :third "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines right with context when left is true and "
@@ -452,7 +450,7 @@
      :expected-left-context nil
      :expected-right-context nil
      :result [true {:first [1 2 3 4] :second "second" :third "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    ;(merge-test
    ;  :description (str "combines right with context when left is false and "
@@ -463,7 +461,7 @@
    ;  :expected-left-context nil
    ;  :expected-right-context nil
    ;  :result [true {:first [1 2 3 4] :second "second" :third "third"}]
-   ;  :comparator core/or-comparator)
+   ;  :comparator :or)
 
    (merge-test
      :description (str "combines right with context when left is false and "
@@ -473,8 +471,8 @@
      :right-attribute {:first [3 4] :third "third"}
      :expected-left-context nil
      :expected-right-context nil
-     :result [false {:first [1 2 3 4] :second "second" :third "third"}]
-     :comparator core/and-comparator)
+     :result [false {:first [1 2] :second "second"}]
+     :comparator :and)
 
    (merge-test
      :description (str "combines left with context when right is false and "
@@ -485,7 +483,7 @@
      :expected-left-context nil
      :expected-right-context nil
      :result [false {:first [1 2 3 4] :second "second" :third "third"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description "combines left and right with context when both are maps"
@@ -498,7 +496,7 @@
                     :second "second"
                     :third  "third"
                     :fourth "fourth"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines left and second slot of right with context "
@@ -512,7 +510,7 @@
                     :second "second"
                     :third  "third"
                     :fourth "fourth"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines left and second slot of right with context "
@@ -526,7 +524,7 @@
                      :second "second"
                      :third  "third"
                      :fourth "fourth"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines second slot of left and right with context "
@@ -540,7 +538,7 @@
                     :second "second"
                     :third  "third"
                     :fourth "fourth"}]
-     :comparator core/and-comparator)
+     :comparator :and)
 
    (merge-test
      :description (str "combines second slot of left and right with context "
@@ -550,11 +548,10 @@
      :right-attribute {:first [5 6] :fourth "fourth"}
      :expected-left-context nil
      :expected-right-context nil
-     :result [false {:first  [1 2 3 4 5 6]
+     :result [false {:first  [1 2 3 4]
                      :second "second"
-                     :third  "third"
-                     :fourth "fourth"}]
-     :comparator core/and-comparator)])
+                     :third  "third"}]
+     :comparator :and)])
 
 (deftest merge-decisions
   (doseq [decision-test decision-tests]
@@ -729,7 +726,7 @@
            :left-attribute (fn [_] false)
            :right-attribute (fn [_] false)
            :expected-left-context {:important "stuff"}
-           :expected-right-context {:important "stuff"}
+           :expected-right-context nil
            :result [false {:important "stuff"}])
          (merge-test
            :description "return true from and when true and true"

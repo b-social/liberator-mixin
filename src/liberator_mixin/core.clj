@@ -43,6 +43,14 @@
           (str/starts-with? n "allowed")
           (str/starts-with? n "known"))))))
 
+(defn or-comparator
+  [left right]
+  (or left right))
+
+(defn and-comparator
+  [left right]
+  (and left right))
+
 (defn merge-decisions
   "Merges together two liberator decisions, `left` and `right`.
 
@@ -64,15 +72,20 @@
     (letfn [(if-vector? [thing f]
               (if (vector? thing) (f thing) thing))
             (execute-and-update [[result context] f]
-              (let [decision (f context)
-                    comparison (if (nil? result)
-                                 (if-vector? decision first)
-                                 (comparator result
-                                   (if-vector? decision first)))
-                    result (boolean comparison)
-                    context-update (if-vector? decision second)
-                    context (liberator/update-context context context-update)]
-                [result context]))]
+              (if (and (= comparator :and) (false? result))
+                [result context]
+                (let [decision (f context)
+                      comparator (case comparator
+                                   :and and-comparator
+                                   :or or-comparator)
+                      comparison (if (nil? result)
+                                   (if-vector? decision first)
+                                   (comparator result
+                                     (if-vector? decision first)))
+                      result (boolean comparison)
+                      context-update (if-vector? decision second)
+                      context (liberator/update-context context context-update)]
+                  [result context])))]
       (-> [nil context]
         (execute-and-update (liberator-util/make-function left))
         (execute-and-update (liberator-util/make-function right))))))
@@ -126,22 +139,22 @@
   (fn merged
     ([] (merged {}))
     ([context]
-      (let [left-conf ((liberator-util/make-function left) context)
-            right-conf ((liberator-util/make-function right) context)]
-        (cond
-          (-> right-conf meta :replace)
-          right-conf
+     (let [left-conf ((liberator-util/make-function left) context)
+           right-conf ((liberator-util/make-function right) context)]
+       (cond
+         (-> right-conf meta :replace)
+         right-conf
 
-          (and (list? left-conf) (coll? right-conf))
-          (apply list (concat right-conf left-conf))
+         (and (list? left-conf) (coll? right-conf))
+         (apply list (concat right-conf left-conf))
 
-          (and (vector? left-conf) (coll? right-conf))
-          (into right-conf left-conf)
+         (and (vector? left-conf) (coll? right-conf))
+         (into right-conf left-conf)
 
-          (and (set? left-conf) (coll? right-conf))
-          (into left-conf right-conf)
+         (and (set? left-conf) (coll? right-conf))
+         (into left-conf right-conf)
 
-          :otherwise right-conf)))))
+         :otherwise right-conf)))))
 
 (def or-decisions
   #{:malformed?
@@ -156,19 +169,11 @@
     :respond-with-entity?
     :uri-too-long?})
 
-(defn or-comparator
-  [left right]
-  (or left right))
-
-(defn and-comparator
-  [left right]
-  (and left right))
-
 (defn get-comparator
   [decision]
   (if (contains? or-decisions decision)
-    or-comparator
-    and-comparator))
+    :or
+    :and))
 
 (defn merge-resource-definitions
   "Merges together multiple liberator resource definitions, specified as maps.
