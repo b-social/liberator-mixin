@@ -149,7 +149,6 @@
   {:handle-method-not-allowed
    (fn [{:keys [method-not-allowed-message]
          :or   {method-not-allowed-message "Method not allowed"}}]
-     (println ":handle-method-not-allowed")
      (hal/add-properties
        (hal/new-resource)
        {:error method-not-allowed-message}))})
