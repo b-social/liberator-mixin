@@ -5,13 +5,33 @@
   :license {:name "The MIT License"
             :url  "https://opensource.org/licenses/MIT"}
 
-  :dependencies [[liberator "0.15.3"]
-                 [halboy "5.1.1"]
-                 [b-social/jason "0.1.5"]
+  :dependencies [[b-social/jason "0.1.6"]
+                 [buddy/buddy-auth "3.0.1"]
+                 [liberator "0.15.3"]
+                 
                  [b-social/hype "1.0.0"]
-                 [buddy/buddy-auth "2.2.0"]
+                 
                  [com.auth0/java-jwt "3.18.2"
-                  :exclusions [com.fasterxml.jackson.core/jackson-databind]]]
+                  :exclusions [com.fasterxml.jackson.core/jackson-databind]]
+
+                 ;; we only need halboy for halboy.resource and halboy.json
+                 ;; but it pulls in a lot of extra deps and also
+                 ;; we let buddy-auth pull in more recent version of cheshire
+                 [halboy "5.1.1"
+                  :exclusions [http-kit
+                               http-kit.fake
+                               tigris
+                               cheshire
+                               org.eclipse.jetty/jetty-server]]
+                 
+                 ;; brought in by cheshire for buddy-auth
+                 ;; picking same version of jackson libs
+                 ;; as in b-social/jason to avoid compat issues
+                 [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor "2.15.2"]
+                 [com.fasterxml.jackson.dataformat/jackson-dataformat-smile "2.15.2"]
+                 
+                 ;; force upgrade from 1.68 pulled in by buddy-auth to fix vulnerability
+                 [org.bouncycastle/bcprov-jdk15on "1.69"]]
 
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
@@ -24,10 +44,11 @@
             [lein-bikeshed "0.5.1"]]
 
   :profiles {:shared {:dependencies
-                      [[org.clojure/clojure "1.10.1"]
-                       [camel-snake-kebab "0.4.1"]
-                       [ring/ring-core "1.8.1"]
-                       [ring/ring-mock "0.4.0"]
+                      [[org.clojure/clojure "1.11.3"]
+                       [camel-snake-kebab "0.4.3"]
+                       [ring/ring-core "1.12.1"]
+                       [ring/ring-mock "0.4.0"
+                        :exclusions [cheshire]]
                        [eftest "0.5.9"]]}
              :dev    [:shared {:source-paths ["dev"]
                                :eftest       {:multithread? false}}]
