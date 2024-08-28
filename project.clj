@@ -5,7 +5,7 @@
   :license {:name "The MIT License"
             :url  "https://opensource.org/licenses/MIT"}
 
-  :dependencies [[b-social/jason "0.1.6"]
+  :dependencies [[b-social/jason "0.1.7"]
                  [buddy/buddy-auth "3.0.1"]
                  [liberator "0.15.3"]
                  
@@ -27,8 +27,8 @@
                  ;; brought in by cheshire for buddy-auth
                  ;; picking same version of jackson libs
                  ;; as in b-social/jason to avoid compat issues
-                 [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor "2.15.2"]
-                 [com.fasterxml.jackson.dataformat/jackson-dataformat-smile "2.15.2"]
+                 [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor "2.17.2"]
+                 [com.fasterxml.jackson.dataformat/jackson-dataformat-smile "2.17.2"]
                  
                  ;; force upgrade from 1.68 pulled in by buddy-auth to fix vulnerability
                  [org.bouncycastle/bcprov-jdk15on "1.69"]]
