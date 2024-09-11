@@ -10,7 +10,6 @@
     [liberator-mixin.json.core :as json]
     [clojure.string :as string]))
 
-
 (deftest with-jwt-scopes-given-no-jwt
   (let [handler (core/build-resource
                   (json/with-json-media-type)
@@ -65,7 +64,28 @@
         request (ring/header
                   (ring/request :get "/")
                   "x-auth-jwt"
-                   (sign {:scope "read write"} "bar"))
+                  (sign {:scope "read write"} "bar"))
+
+        response (handler request)]
+    (testing "provided correct scopes to allowed function"
+      (is (= 200 (:status response))))))
+
+(deftest with-jwt-scopes-given-jwt-with-no-scopes
+  (let [handler (core/build-resource
+                  (json/with-json-media-type)
+                  (auth/with-bearer-token)
+                  (with-jwt-scopes)
+                  (auth/with-www-authenticate-header)
+                  {:token-header-name "x-auth-jwt"
+                   :token-type nil
+                   :allowed?
+                   (fn [{:keys [scopes]}]
+                     (= scopes nil))})
+
+        request (ring/header
+                  (ring/request :get "/")
+                  "x-auth-jwt"
+                  (sign {} "bar"))
 
         response (handler request)]
     (testing "provided correct scopes to allowed function"
@@ -104,9 +124,9 @@
                      (= scopes #{"read" "write"}))})
 
         request-1 (ring/header
-                  (ring/request :get "/")
-                  "x-auth-jwt"
-                  (str "bearer " (sign {:scope "read write"} "bar")))
+                    (ring/request :get "/")
+                    "x-auth-jwt"
+                    (str "bearer " (sign {:scope "read write"} "bar")))
         response-1 (handler request-1)
 
         request-2 (ring/header
@@ -146,8 +166,7 @@
 
         get-response (handler (ring/request :get "/"))
         post-response (handler (ring/request :post "/"))
-        post-header (get-in post-response [:headers "WWW-Authenticate"])
-        ]
+        post-header (get-in post-response [:headers "WWW-Authenticate"])]
     (testing "provided correct scopes to allowed function"
       (is (= 200 (:status get-response))))
 
