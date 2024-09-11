@@ -3,7 +3,7 @@
     [clojure.string :as string]
     [clojure.data.json :as json])
   (:import [com.auth0.jwt JWT]
-           [java.util Base64]))
+    [java.util Base64]))
 
 (defn- get-jwt-payload [token]
   (let [jwt (.decodeJwt (new JWT) token)
@@ -30,14 +30,16 @@
        (cond
          (some? token)
          (try
-           (let [
-                 decoded-payload (get-jwt-payload token)
-                 scope-string (->>
+           (let [decoded-payload (get-jwt-payload token)
+                 scope-string (some->>
                                 (filter scope? decoded-payload)
                                 (first)
                                 (val))
 
-                 scopes (set (string/split scope-string #" "))]
+                 scopes (some->
+                          scope-string
+                          (string/split #" ")
+                          (set))]
              [true {:scopes scopes}])
            (catch Exception e
              [false {:www-authenticate {:message (ex-message e)
