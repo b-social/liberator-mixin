@@ -43,6 +43,16 @@
           (str/starts-with? n "allowed")
           (str/starts-with? n "known"))))))
 
+(defn- if-vector? [thing f]
+  (if (vector? thing) (f thing) thing))
+
+(defn- is-context? [context?]
+  (or (map? context?) (fn? context?)))
+
+(defn- decision-and-context [f context]
+  (let [result ((liberator-util/make-function f) context)]
+    [(if-vector? result first) (if-vector? result second)]))
+
 (defn merge-decisions
   "Merges together two liberator decisions, `left` and `right`.
 
@@ -61,21 +71,23 @@
   the `right` decision will see any context updates made by the `left`."
   [left right comparator]
   (fn [context]
-    (letfn [(if-vector? [thing f]
-              (if (vector? thing) (f thing) thing))
-            (execute-and-update [[result context] f]
-              (let [decision (f context)
-                    comparison (if (nil? result)
-                                 (if-vector? decision first)
-                                 (comparator result
-                                   (if-vector? decision first)))
-                    result (boolean comparison)
-                    context-update (if-vector? decision second)
-                    context (liberator/update-context context context-update)]
-                [result context]))]
-      (-> [nil context]
-        (execute-and-update (liberator-util/make-function left))
-        (execute-and-update (liberator-util/make-function right))))))
+    (let [[left-decision left-added-context] (decision-and-context left context)
+          context-for-right (liberator/update-context context left-added-context)
+          [right-decision right-added-context] (decision-and-context right context-for-right)
+          result (boolean (comparator left-decision right-decision))]
+      (if-let [context-to-add (cond
+                                (is-context? left-added-context)
+                                (-> nil
+                                  (liberator/update-context left-added-context)
+                                  (liberator/update-context right-added-context))
+
+                                (is-context? right-added-context)
+                                (liberator/update-context nil right-added-context)
+
+                                :else
+                                nil)]
+        [result context-to-add]
+        result))))
 
 (defn merge-actions
   "Merges together two liberator actions, `left` and `right`.
