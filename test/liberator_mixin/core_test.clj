@@ -611,7 +611,30 @@
             (str "left context in " (:description decision-test)))
           (is (= (get-in decision-test [:right :context :expected])
                 @(get-in decision-test [:right :context :actual]))
-            (str "right context in " (:description decision-test))))))))
+            (str "right context in " (:description decision-test)))))))
+
+  (testing "does not duplicate context"
+    (let [returns-true (fn [ctx] ((util/make-function (fn [_] true)) ctx))
+          merged (-> returns-true
+                   (core/merge-decisions returns-true core/and-comparator)
+                   (core/merge-decisions returns-true core/and-comparator)
+                   (core/merge-decisions returns-true core/and-comparator)
+                   (core/merge-decisions returns-true core/and-comparator)
+                   (core/merge-decisions returns-true core/and-comparator)
+                   (core/merge-decisions returns-true core/and-comparator)
+                   (core/merge-decisions returns-true core/and-comparator))]
+      (is (= true (merged {:foo [1]}))))
+
+    (let [adds-to-context (fn [ctx] ((util/make-function (fn [_] {:foo [1]})) ctx))
+          merged (-> adds-to-context
+                   (core/merge-decisions adds-to-context core/and-comparator)
+                   (core/merge-decisions adds-to-context core/and-comparator)
+                   (core/merge-decisions adds-to-context core/and-comparator)
+                   (core/merge-decisions adds-to-context core/and-comparator)
+                   (core/merge-decisions adds-to-context core/and-comparator)
+                   (core/merge-decisions adds-to-context core/and-comparator)
+                   (core/merge-decisions adds-to-context core/and-comparator))]
+      (is (= [true {:foo [1 1 1 1 1 1 1 1]}] (merged {:foo [1]}))))))
 
 (def handler-tests
   [(merge-test
