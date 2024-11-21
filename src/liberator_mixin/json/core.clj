@@ -1,7 +1,5 @@
 (ns liberator-mixin.json.core
   (:require
-    [clojure.string :refer [starts-with?]]
-
     [jason.convenience :as jason-conv]
 
     [liberator.representation :as r]
@@ -13,14 +11,19 @@
   (if-let [type (get-in request [:headers "content-type"])]
     (seq (re-find #"^application/(.+\+)?json" type))))
 
+(defn- body-as-string
+  [{:keys [body]}]
+  (if (string? body)
+    body
+    (slurp body)))
+
 (defn- read-json-body [request decoder]
-  (if (json-request? request)
-    (if-let [body (:body request)]
-      (let [body-string (slurp body)]
-        (try
-          [true (decoder body-string)]
-          (catch JsonParseException _
-            [false nil]))))))
+  (when (json-request? request)
+    (when-let [body (body-as-string request)]
+      (try
+        [true (decoder body)]
+        (catch JsonParseException _
+          [false nil])))))
 
 (defn- read-json-params [request decoder]
   (letfn [(parse-param [value]
