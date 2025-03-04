@@ -9,8 +9,6 @@
                  [buddy/buddy-auth "3.0.1"]
                  [liberator "0.15.3"]
                  
-                 [b-social/hype "1.0.0"]
-                 
                  [com.auth0/java-jwt "3.18.2"
                   :exclusions [com.fasterxml.jackson.core/jackson-databind]]
 
