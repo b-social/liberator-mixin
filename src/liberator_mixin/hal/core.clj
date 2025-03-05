@@ -42,12 +42,27 @@
   (:require
     [halboy.resource :as hal]
     [liberator.representation :as r]
+
+    [halboy.json :as haljson]
+
     [liberator-mixin.logging.core :as log]
-    [jason.convenience :as jason-conv]))
+    [jason.convenience :as jason-conv])
+  (:import
+    [halboy.resource Resource]))
 
 (def hal-media-type
   "The HAL media type string."
   "application/hal+json")
+
+(extend-protocol r/Representation
+  Resource
+  (as-response [data {:keys [url-for] :as context}]
+    (assert url-for "Missing url resolver fn url-for")
+    (r/as-response
+      (-> data
+        (hal/add-link :discovery (url-for :discovery))
+        (haljson/resource->map))
+      context)))
 
 (defmethod r/render-map-generic hal-media-type [data {:keys [json]}]
   ((get json :encoder jason-conv/->wire-json) data))
