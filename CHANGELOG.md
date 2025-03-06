@@ -8,30 +8,7 @@ and this project adheres to
 
 
 ## [Unreleased]
-### Removed
-Removed the functionality to automatically add the :discovery link to a halboy Resource.
-
-
-The identical functionality can be provided by adding the following snippet to the relevant service.
-```clojure
-;; :require
-;; [hype.core :as hype]
-;; [halboy.core :as hal]
-;; [halboy.json :as haljson]
-
-;; :import
-;; [halboy.resource Resource]
-
-(extend-protocol r/Representation
-  Resource
-  (as-response [data {:keys [request routes] :as context}]
-    (r/as-response
-      (-> data
-        (hal/add-link :discovery
-          (hype/absolute-url-for request routes :discovery))
-        (haljson/resource->map))
-      context)))
-```
+The hal.core functionality that implements Representation now requires a `discovery-url-fn` function to be included in the context.
 
 ## [0.0.65] — 2024-10-16
 

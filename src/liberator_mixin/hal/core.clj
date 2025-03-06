@@ -56,11 +56,11 @@
 
 (extend-protocol r/Representation
   Resource
-  (as-response [data {:keys [url-for] :as context}]
-    (assert url-for "Missing url resolver fn url-for")
+  (as-response [data {:keys [discovery-url-fn] :as context}]
+    (assert discovery-url-fn "Missing discovery-url-fn in context")
     (r/as-response
       (-> data
-        (hal/add-link :discovery (url-for :discovery))
+          (hal/add-link :discovery (discovery-url-fn))
         (haljson/resource->map))
       context)))
 
