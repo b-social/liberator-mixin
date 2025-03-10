@@ -13,7 +13,9 @@
     [liberator-mixin.logging.core :as log]
     [liberator-mixin.json.core :as json]
     [liberator-mixin.hypermedia.core :as hypermedia]
-    [liberator-mixin.hal.core :as hal]))
+    [liberator-mixin.hal.core :as hal]
+
+    [halboy.resource]))
 
 (deftype TestLogger [state]
   log/Logger
@@ -31,6 +33,11 @@
   (->
     (resource request)
     (update :body jason-conv/<-wire-json)))
+
+(defn with-discovery-url-fn []
+  {:initialize-context
+   (fn [_]
+     {:discovery-url-fn (constantly "discovery-url")})})
 
 (deftest default-json-encoding
   (testing "produces camel case meta preserving JSON by default"
@@ -155,6 +162,41 @@
       (is (= 401 (:status response)))
       (is (= {:error "unauthorised"}
             (:body response))))))
+
+(deftest with-halboy-resource-response
+  (testing "converts halboy resource to json"
+    (let [resource (core/build-resource
+                    (hypermedia/with-hypermedia-mixin)
+                    (json/with-json-mixin)
+                    (hal/with-hal-media-type)
+                    {:handle-ok (fn [_] (-> (halboy.resource/map->Resource {})
+                                            (halboy.resource/add-property :status "OK")))})
+          response (call-resource
+                    resource
+                    (ring/header
+                     (ring/request :get "/")
+                     :accept hal/hal-media-type))]
+      (is (= 200 (:status response)))
+      (is (= {:status "OK"}
+             (:body response)))))
+  
+  (testing "adds discovery-url when fn is provided in context"
+    (let [resource (core/build-resource
+                    (hypermedia/with-hypermedia-mixin)
+                    (json/with-json-mixin)
+                    (hal/with-hal-media-type)
+                    (with-discovery-url-fn)
+                    {:handle-ok (fn [_] (-> (halboy.resource/map->Resource {})
+                                            (halboy.resource/add-property :status "OK")))})
+          response (call-resource
+                    resource
+                    (ring/header
+                     (ring/request :get "/")
+                     :accept hal/hal-media-type))]
+      (is (= 200 (:status response)))
+      (is (= {:status "OK"
+              :_links {:discovery {:href "discovery-url"}}}
+             (:body response))))))
 
 (deftest with-not-found-handler
   (testing "provides a sensible default when the resource does not exist"
