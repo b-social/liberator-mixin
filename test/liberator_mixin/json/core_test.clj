@@ -89,6 +89,24 @@
             {:key "value"}
             (:body response))))))
 
+(deftest with-ring-body-as-string
+  (testing "body is already parsed to string"
+    (let [resource (l/build-resource
+                     (json/with-json-media-type)
+                     (json/with-body-parsed-as-json)
+                     {:allowed-methods [:post]
+                      :handle-created (fn [{:keys [request]}]
+                                        (:body request))})
+          request (-> (ring/request :post "/")
+                      (ring/header "Accept" json/json-media-type)
+                      (ring/header "Content-Type" json/json-media-type)
+                      (ring/body (jason-conv/->wire-json {:key "value"}))
+                      (update :body slurp))
+          response (call-resource resource request)]
+      (is (= 201 (:status response)))
+      (is (= {:key "value"}
+             (:body response))))))
+
 (deftest with-params-parsed-as-json
   (testing "parses simple JSON params"
     (let [resource
