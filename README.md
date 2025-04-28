@@ -2,6 +2,20 @@
 
 An extension to liberator allowing for composable mixins.
 
+## Upgrade to 1.x
+
+The change to version 1.x was done to denote a breaking change rather than signal a newly achieved degree of stability. The hal.core functionality that implements Representation now requires a `discovery-url-fn` function to be included in the context if you want it to automatically add a discovery url to the resource. This was done to avoid tying this library to the hype library, and thus to to the bidi router.
+
+To maintain prior behaviour, apply the following change to your code following the upgrade. Add this new mixin and include it as part of your resource:
+
+```clojure
+(defn with-discovery-url-fn []
+  {:initialize-context
+   (fn [{:keys [request routes]}]
+     {:discovery-url-fn #(hype/absolute-url-for request routes :discovery)})})
+```
+
+
 ## Install
 
 Add the following to your `project.clj` file:
@@ -13,10 +27,6 @@ Add the following to your `project.clj` file:
 ## Documentation
 
 * [API Docs](http://b-social.github.io/liberator-mixin)
-
-## Usage
-
-FIXME
 
 ## Contributing
 
