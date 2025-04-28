@@ -8,6 +8,14 @@ and this project adheres to
 
 
 ## [Unreleased]
+The hal.core functionality that implements Representation now requires a `discovery-url-fn` function to be included in the context if you want it to automatically add a discovery url to the resource. This can be achieved by adding the following mixin to your handler:
+
+```clojure
+(defn with-discovery-url-fn [_]
+  {:initialize-context
+   (fn [{:keys [request routes]}]
+     {:discovery-url-fn #(hype/absolute-url-for request routes :discovery)})})
+```
 
 ## [0.0.65] — 2024-10-16
 

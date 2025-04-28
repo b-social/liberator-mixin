@@ -45,16 +45,10 @@
 
     [halboy.json :as haljson]
 
-    [hype.core :as hype]
-
     [liberator-mixin.logging.core :as log]
     [jason.convenience :as jason-conv])
   (:import
-    [halboy.resource Resource]
-    [java.util UUID]))
-
-(defn- random-uuid []
-  (str (UUID/randomUUID)))
+    [halboy.resource Resource]))
 
 (def hal-media-type
   "The HAL media type string."
@@ -62,13 +56,11 @@
 
 (extend-protocol r/Representation
   Resource
-  (as-response [data {:keys [request routes] :as context}]
-    (r/as-response
-      (-> data
-        (hal/add-link :discovery
-          (hype/absolute-url-for request routes :discovery))
-        (haljson/resource->map))
-      context)))
+  (as-response [data {:keys [discovery-url-fn] :as context}]
+    (let [resource (if discovery-url-fn
+                     (hal/add-link data :discovery (discovery-url-fn))
+                     data)]
+      (r/as-response (haljson/resource->map resource) context))))
 
 (defmethod r/render-map-generic hal-media-type [data {:keys [json]}]
   ((get json :encoder jason-conv/->wire-json) data))

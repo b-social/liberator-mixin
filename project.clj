@@ -1,4 +1,4 @@
-(defproject b-social/liberator-mixin "0.0.66-SNAPSHOT"
+(defproject b-social/liberator-mixin "1.0.0-SNAPSHOT"
   :description "An extension to liberator allowing for composable mixins."
   :url "https://github.com/b-social/liberator-mixin"
 
@@ -8,8 +8,6 @@
   :dependencies [[b-social/jason "0.1.7"]
                  [buddy/buddy-auth "3.0.1"]
                  [liberator "0.15.3"]
-                 
-                 [b-social/hype "1.0.0"]
                  
                  [com.auth0/java-jwt "3.18.2"
                   :exclusions [com.fasterxml.jackson.core/jackson-databind]]
