@@ -21,7 +21,7 @@ To maintain prior behaviour, apply the following change to your code following t
 Add the following to your `project.clj` file:
 
 ```clj
-[b-social/liberator-mixin "0.0.65"]
+[b-social/liberator-mixin "1.0.0"]
 ```
 
 ## Documentation
