@@ -20,6 +20,7 @@
                                http-kit.fake
                                tigris
                                cheshire
+                               uritemplate-clj
                                org.eclipse.jetty/jetty-server]]
                  
                  ;; brought in by cheshire for buddy-auth
