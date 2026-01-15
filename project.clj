@@ -66,7 +66,9 @@
   :cljfmt {:indents ^:replace {#".*" [[:inner 0]]}}
 
   :deploy-repositories
-  {"releases" {:url "https://repo.clojars.org" :creds :gpg}}
+  {"releases" {:url "https://repo.clojars.org"
+               :username :env/clojars_username
+               :password :env/clojars_password}}
 
   :release-tasks
   [["shell" "git" "diff" "--exit-code"]
