@@ -31,6 +31,7 @@
                  [com.fasterxml.jackson.dataformat/jackson-dataformat-smile "2.17.2"]
                  
                  ;; force upgrade from 1.68 pulled in by buddy-auth to fix vulnerability
+                 [org.bouncycastle/bcpkix-jdk15on "1.69"]
                  [org.bouncycastle/bcprov-jdk15on "1.69"]]
 
   :plugins [[lein-cloverage "1.0.13"]
