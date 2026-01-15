@@ -9,6 +9,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-01-15
+
 ## [1.0.0] — 2025-04-28
 The hal.core functionality that implements Representation now requires a `discovery-url-fn` function to be included in the context if you want it to automatically add a discovery url to the resource. This can be achieved by adding the following mixin to your handler:
 
@@ -276,4 +278,5 @@ Released without _CHANGELOG.md_.
 [0.0.64]: https://github.com/b-social/liberator-mixin/compare/0.0.63...0.0.64
 [0.0.65]: https://github.com/b-social/liberator-mixin/compare/0.0.64...0.0.65
 [1.0.0]: https://github.com/b-social/liberator-mixin/compare/0.0.65...1.0.0
-[Unreleased]: https://github.com/b-social/liberator-mixin/compare/1.0.0...HEAD
+[1.0.1]: https://github.com/b-social/liberator-mixin/compare/1.0.0...1.0.1
+[Unreleased]: https://github.com/b-social/liberator-mixin/compare/1.0.1...HEAD
