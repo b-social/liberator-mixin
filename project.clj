@@ -25,6 +25,7 @@
                  ;; brought in by cheshire for buddy-auth
                  ;; picking same version of jackson libs
                  ;; as in b-social/jason to avoid compat issues
+                 [com.fasterxml.jackson.core/jackson-core "2.18.6"]
                  [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor "2.17.2"]
                  [com.fasterxml.jackson.dataformat/jackson-dataformat-smile "2.17.2"]
                  
