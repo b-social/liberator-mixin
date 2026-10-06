@@ -30,7 +30,10 @@
                  
                  ;; force upgrade from 1.68 pulled in by buddy-auth to fix vulnerability
                  [org.bouncycastle/bcpkix-jdk15on "1.69"]
-                 [org.bouncycastle/bcprov-jdk15on "1.69"]]
+                 [org.bouncycastle/bcprov-jdk18on "1.85"]]
+
+  :managed-dependencies [[com.fasterxml.jackson.core/jackson-core "2.18.8"]
+                         [com.fasterxml.jackson.core/jackson-databind "2.18.9"]]
 
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
