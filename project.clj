@@ -28,9 +28,16 @@
                  [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor "2.17.2"]
                  [com.fasterxml.jackson.dataformat/jackson-dataformat-smile "2.17.2"]
                  
-                 ;; force upgrade from 1.68 pulled in by buddy-auth to fix vulnerability
-                 [org.bouncycastle/bcpkix-jdk15on "1.69"]
-                 [org.bouncycastle/bcprov-jdk15on "1.69"]]
+                 ;; force upgrade to the jdk18on trio at 1.85 to fix vulnerability
+                 ;; (replaces the old jdk15on 1.69 deps; both ship the same
+                 ;; org.bouncycastle.* classes, suffix is just the target JDK)
+                 [org.bouncycastle/bcprov-jdk18on "1.85"]
+                 [org.bouncycastle/bcpkix-jdk18on "1.85"]
+                 [org.bouncycastle/bcutil-jdk18on "1.85"]]
+
+  :exclusions [org.bouncycastle/bcprov-jdk15on
+               org.bouncycastle/bcpkix-jdk15on
+               org.bouncycastle/bcutil-jdk15on]
 
   :plugins [[lein-cloverage "1.0.13"]
             [lein-shell "0.5.0"]
