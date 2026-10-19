@@ -35,6 +35,8 @@
                  [org.bouncycastle/bcpkix-jdk18on "1.85"]
                  [org.bouncycastle/bcutil-jdk18on "1.85"]]
 
+  :managed-dependencies [[com.fasterxml.jackson.core/jackson-databind "2.18.9"]]
+
   :exclusions [org.bouncycastle/bcprov-jdk15on
                org.bouncycastle/bcpkix-jdk15on
                org.bouncycastle/bcutil-jdk15on]
