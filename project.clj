@@ -31,9 +31,11 @@
                  ;; force upgrade to the jdk18on trio at 1.85 to fix vulnerability
                  ;; (replaces the old jdk15on 1.69 deps; both ship the same
                  ;; org.bouncycastle.* classes, suffix is just the target JDK)
-                 [org.bouncycastle/bcprov-jdk18on "1.85"]
-                 [org.bouncycastle/bcpkix-jdk18on "1.85"]
-                 [org.bouncycastle/bcutil-jdk18on "1.85"]]
+                 [org.bouncycastle/bcprov-jdk18on "1.87"]
+                 [org.bouncycastle/bcpkix-jdk18on "1.87"]
+                 [org.bouncycastle/bcutil-jdk18on "1.87"]]
+
+  :managed-dependencies [[com.fasterxml.jackson.core/jackson-databind "2.18.12"]]
 
   :exclusions [org.bouncycastle/bcprov-jdk15on
                org.bouncycastle/bcpkix-jdk15on
