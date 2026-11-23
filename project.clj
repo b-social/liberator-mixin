@@ -9,7 +9,7 @@
                  [buddy/buddy-auth "3.0.1"]
                  [liberator "0.15.3"]
                  
-                 [com.auth0/java-jwt "3.18.2"
+                 [com.auth0/java-jwt "3.19.2"
                   :exclusions [com.fasterxml.jackson.core/jackson-databind]]
 
                  ;; we only need halboy for halboy.resource and halboy.json
@@ -31,9 +31,11 @@
                  ;; force upgrade to the jdk18on trio at 1.85 to fix vulnerability
                  ;; (replaces the old jdk15on 1.69 deps; both ship the same
                  ;; org.bouncycastle.* classes, suffix is just the target JDK)
-                 [org.bouncycastle/bcprov-jdk18on "1.85"]
-                 [org.bouncycastle/bcpkix-jdk18on "1.85"]
+                 [org.bouncycastle/bcprov-jdk18on "1.87"]
+                 [org.bouncycastle/bcpkix-jdk18on "1.87"]
                  [org.bouncycastle/bcutil-jdk18on "1.85"]]
+
+  :managed-dependencies [[com.fasterxml.jackson.core/jackson-databind "2.18.9"]]
 
   :exclusions [org.bouncycastle/bcprov-jdk15on
                org.bouncycastle/bcpkix-jdk15on
